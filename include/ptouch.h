@@ -32,12 +32,22 @@ struct _pt_tape_info {
 #define FLAG_PLITE		(1 << 2)
 #define FLAG_P700_INIT		(1 << 3)
 
+typedef enum _pt_page_flags {
+	FEED_NONE	= 0x0,
+	FEED_SMALL	= 0x08,
+	FEED_MEDIUM	= 0x0c,
+	FEED_LARGE	= 0x1a,
+	AUTO_CUT	= (1 << 6),
+	MIRROR		= (1 << 7),
+} pt_page_flags;
+
 struct _pt_dev_info {
 	int vid;		/* USB vendor ID */
 	int pid;		/* USB product ID */
 	char *name;
 	int max_px;		/* Maximum pixel width that can be printed */
 	int dpi;		/* Dots per inch of the printhead */
+	//size_t bytes_per_line;
 	int flags;
 };
 typedef struct _pt_dev_info *pt_dev_info;
