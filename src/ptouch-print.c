@@ -360,17 +360,21 @@ void usage(char *progname)
 {
 	printf("usage: %s [options] <print-command(s)>\n", progname);
 	printf("options:\n");
+	printf("\t--debug\t\t\tenable debug output\n");
 	printf("\t--font <file>\t\tuse font <file> or <name>\n");
+	printf("\t--fontsize <size>\tManually set fontsize\n");
 	printf("\t--writepng <file>\tinstead of printing, write output to png file\n");
-	printf("\t\t\t\tThis currently works only when using\n\t\t\t\tEXACTLY ONE --text statement\n");
-	printf("print-commands:\n");
+	printf("print commands:\n");
 	printf("\t--image <file>\t\tprint the given image which must be a 2 color\n");
 	printf("\t\t\t\t(black/white) png\n");
 	printf("\t--text <text>\t\tPrint 1-4 lines of text.\n");
 	printf("\t\t\t\tIf the text contains spaces, use quotation marks\n\t\t\t\taround it.\n");
 	printf("\t--cutmark\t\tPrint a mark where the tape should be cut\n");
-	printf("\t--fontsize\t\tManually set fontsize\n");
 	printf("\t--pad <n>\t\tAdd n pixels padding (blank tape)\n");
+	printf("other commands:\n");
+	printf("\t--version\t\tshow version info (required for bug report)\n");
+	printf("\t--info\t\t\tshow info about detected tape\n");
+	printf("\t--list-supported\tshow printers supported by this version\n");
 	exit(1);
 }
 
@@ -428,6 +432,9 @@ int parse_args(int argc, char **argv)
 			}
 		} else if (strcmp(&argv[i][1], "-version") == 0) {
 			printf(_("ptouch-print version %s by Dominic Radermacher\n"), VERSION);
+			exit(0);
+		} else if (strcmp(&argv[i][1], "-list-supported") == 0) {
+			ptouch_list_supported();
 			exit(0);
 		} else {
 			usage(argv[0]);

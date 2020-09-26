@@ -330,3 +330,14 @@ int ptouch_sendraster(ptouch_dev ptdev, uint8_t *data, size_t len)
 	}
 	return rc;
 }
+
+void ptouch_list_supported()
+{
+	printf("Supported printers (some might have quirks)\n");
+	for (int i=0; ptdevs[i].vid > 0; i++) {
+		if ((ptdevs[i].flags & FLAG_PLITE) != FLAG_PLITE) {
+			printf("\t%s\n", ptdevs[i].name);
+		}
+	}
+	return;
+}
