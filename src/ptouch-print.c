@@ -126,15 +126,24 @@ gdImage *image_load(const char *file)
 	FILE *f;
 	gdImage *img=NULL;
 
-	if ((f = fopen(file, "rb")) == NULL) {	/* error cant open file */
+	if (!strcmp(file, "-")) {
+		f = stdin;
+	} else {
+		f = fopen(file, "rb");
+	}
+	if (f  == NULL) {	/* error could not open file */
 		return NULL;
 	}
-	if (fread(d, sizeof(d), 1, f) != 1) {
-		return NULL;
-	}
-	rewind(f);
-	if (memcmp(d, png, 8) == 0) {
+	if (fseek(f, 0L, SEEK_SET)) {	/* file is not seekable. eg 'stdin' */
 		img=gdImageCreateFromPng(f);
+	} else {
+		if (fread(d, sizeof(d), 1, f) != 1) {
+			return NULL;
+		}
+		rewind(f);
+		if (memcmp(d, png, 8) == 0) {
+			img=gdImageCreateFromPng(f);
+		}
 	}
 	fclose(f);
 	return img;
