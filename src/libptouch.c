@@ -34,6 +34,7 @@
 
 /* Print area width in 180 DPI pixels */
 struct _pt_tape_info tape_info[]= {
+	{ 4, 24, 0.5},	/* 3.5 mm tape */
 	{ 6, 32, 1.0},	/* 6 mm tape */
 	{ 9, 52, 1.0},	/* 9 mm tape */
 	{12, 76, 2.0},	/* 12 mm tape */
