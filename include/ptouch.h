@@ -31,6 +31,7 @@ struct _pt_tape_info {
 #define FLAG_RASTER_PACKBITS	(1 << 1)
 #define FLAG_PLITE		(1 << 2)
 #define FLAG_P700_INIT		(1 << 3)
+#define FLAG_INFO_COMMAND	(1 << 4)
 
 typedef enum _pt_page_flags {
 	FEED_NONE	= 0x0,
@@ -102,6 +103,7 @@ int ptouch_eject(ptouch_dev ptdev);
 int ptouch_getstatus(ptouch_dev ptdev);
 int ptouch_getmaxwidth(ptouch_dev ptdev);
 int ptouch_enable_packbits(ptouch_dev ptdev);
+int ptouch_information_command(ptouch_dev ptdev, int size_x);
 int ptouch_rasterstart(ptouch_dev ptdev);
 int ptouch_sendraster(ptouch_dev ptdev, uint8_t *data, size_t len);
 void ptouch_list_supported();
