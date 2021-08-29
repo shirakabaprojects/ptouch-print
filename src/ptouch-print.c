@@ -97,6 +97,12 @@ int print_img(ptouch_dev ptdev, gdImage *im)
 		printf(_("ptouch_rasterstart() failed\n"));
 		return -1;
 	}
+	if ((ptdev->devinfo->flags & FLAG_USE_INFO_CMD) == FLAG_USE_INFO_CMD) {
+		ptouch_info_cmd(ptdev, gdImageSX(im));
+		if (debug) {
+			printf(_("send print information command\n"));
+		}
+	}
 	for (k=0; k<gdImageSX(im); k+=1) {
 		memset(rasterline, 0, sizeof(rasterline));
 		for (i=0; i<gdImageSY(im); i+=1) {

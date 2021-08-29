@@ -69,7 +69,7 @@ struct _pt_dev_info ptdevs[] = {
 	{0x04f9, 0x2062, "PT-P750W", 128, 180, FLAG_RASTER_PACKBITS|FLAG_P700_INIT},
 	{0x04f9, 0x2064, "PT-P700 (PLite Mode)", 128, 180, FLAG_PLITE},
 	{0x04f9, 0x2065, "PT-P750W (PLite Mode)", 128, 180, FLAG_PLITE},
-	{0x04f9, 0x2073, "PT-D450", 128, 180, FLAG_RASTER_PACKBITS},
+	{0x04f9, 0x2073, "PT-D450", 128, 180, FLAG_USE_INFO_CMD},
 	/* Notes about the PT-D450: I'm unsure if print width really is 128px */
 	{0x04f9, 0x2074, "PT-D600", 128, 180, FLAG_RASTER_PACKBITS},
 	/* PT-D600 was reported to work, but with some quirks (premature
@@ -194,6 +194,27 @@ int ptouch_enable_packbits(ptouch_dev ptdev)
 {				/* 4D 00 = disable compression */
 	char cmd[] = "M\x02";	/* 4D 02 = enable packbits compression mode */
 	return ptouch_send(ptdev, (uint8_t *)cmd, strlen(cmd));
+}
+
+/* print information command */
+int ptouch_info_cmd(ptouch_dev ptdev, int size_x)
+{
+	/* 1B 69 7A {n1} {n2} {n3} {n4} {n5} {n6} {n7} {n8} {n9} {n10} */
+	uint8_t cmd[] = "\x1b\x69\x7a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+
+	/* {n3}: Media width (mm)
+	   {n4}: Media length (mm)
+	   For the media of width 24 mm, specify as n3 = 18h and n4 = 00h.
+	   n4 is normally 00h, regardless of the paper length. */
+	cmd[5] = ptdev->status->media_width;
+
+	/* {n5} -{n8}: Raster number
+	   n8*256*256*256 + n7*256*256 + n6*256 + n5 */
+	cmd[7] = (uint8_t) size_x & 0xff;
+	cmd[8] = (uint8_t) (size_x >> 8) & 0xff;
+	cmd[9] = (uint8_t) (size_x >> 16) & 0xff;
+	cmd[10] = (uint8_t) (size_x >> 24) & 0xff;
+	return ptouch_send(ptdev, cmd, sizeof(cmd)-1);
 }
 
 int ptouch_rasterstart(ptouch_dev ptdev)
